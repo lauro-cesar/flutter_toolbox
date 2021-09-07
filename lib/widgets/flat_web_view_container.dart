@@ -59,7 +59,8 @@ class FlatWebViewContainer extends StatefulWidget {
 class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
   bool isLoaded = false;
   WebViewController? _webViewController;
-  Map<String, String>? sessionHeaders;
+  Map<String, String>? localSessionHeaders = {};
+  Map<String, String> localheaders = {};
   int indexPage = 0;
 
   @override
@@ -70,10 +71,10 @@ class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
 
     setState(() {
       indexPage = 0;
-      sessionHeaders = <String, String>{
-        HttpHeaders.refererHeader: widget.url,
-      };
-
+      widget.sessionheaders?.forEach((key, value) {
+        localheaders.addAll({key: value.toString()});
+        print(value.toString());
+      });
       isLoaded = false;
     });
   }
@@ -96,7 +97,6 @@ class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
   @override
   Widget build(BuildContext context) {
     return Container(
-
       color: Color.fromRGBO(51, 51, 51, 1),
       alignment: Alignment.center,
       child: IndexedStack(
@@ -116,8 +116,7 @@ class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
                 initialMediaPlaybackPolicy:
                     AutoMediaPlaybackPolicy.always_allow,
                 onWebViewCreated: (WebViewController webViewController) {
-                  webViewController.loadUrl(widget.url,
-                      headers: sessionHeaders);
+                  webViewController.loadUrl(widget.url, headers: localheaders);
                   if (mounted) {
                     setState(() {
                       _webViewController = webViewController;
