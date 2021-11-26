@@ -12,7 +12,7 @@ class GenericMapNotifier extends ChangeNotifier with AppLocalFilesApi {
   final bool? writeToLocalStorage;
   final bool? debugMode;
   final bool? autoNotify;
-  
+
   final List<String>? keepKeys;
   final List<String>? excludeKeys;
 
@@ -32,8 +32,7 @@ class GenericMapNotifier extends ChangeNotifier with AppLocalFilesApi {
 
   final Map<String, dynamic> _instanceMap = {};
 
-  UnmodifiableMapView<String, dynamic> get instanceMap =>
-      UnmodifiableMapView(_instanceMap);
+  UnmodifiableMapView<String, dynamic> get instanceMap => UnmodifiableMapView(_instanceMap);
 
   GenericMapNotifier(
       {required this.keyName,
@@ -73,6 +72,12 @@ class GenericMapNotifier extends ChangeNotifier with AppLocalFilesApi {
     _saveAppState().then((value) => {notifyListeners()});
   }
 
+  Future<void> removeKey(String keyName) async {
+    _instanceMap.remove(keyName);
+    await _saveAppState();
+    notifyListeners();
+  }
+
   void del(Map<String, dynamic> values) {
     _instanceMap.remove(values);
     _saveAppState().then((value) => {notifyListeners()});
@@ -96,8 +101,7 @@ class GenericMapNotifier extends ChangeNotifier with AppLocalFilesApi {
     if (writeToLocalStorage ?? true) {
       var sharedPrefs = await SharedPreferences.getInstance();
       if (sharedPrefs.containsKey(keyName)) {
-        _instanceMap
-            .addAll(jsonDecode(sharedPrefs.getString('${keyName}').toString()));
+        _instanceMap.addAll(jsonDecode(sharedPrefs.getString('${keyName}').toString()));
       } else {
         _instanceMap.addAll(_initialMap);
       }
