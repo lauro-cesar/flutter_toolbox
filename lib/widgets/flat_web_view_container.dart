@@ -168,16 +168,18 @@ class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
               }
             },
             onProgress: (total) {
+    if (mounted) {
               setState(() {
                 totalLoaded = total;
               });
+
               if (total == 100) {
                 setState(() {
                   isLoading = false;
                   isLoaded = true;
                   indexPage = 1;
                 });
-              }
+              }}
             },
             onPageFinished: (String url) {
 
