@@ -97,7 +97,6 @@ class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color.fromRGBO(51, 51, 51, 1),
       alignment: Alignment.center,
       child: IndexedStack(
         index: indexPage,
