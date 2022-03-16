@@ -142,60 +142,62 @@ class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
                     },
                     child: Column(
                       children: [
-                        WebView(
-                          initialUrl: "data:text/html;base64,${base64Encode(const Utf8Encoder().convert('<html><head></head><body background="red"></body></html>'))}" ,
-                          userAgent: widget.userAgent ?? "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 M",
-                          allowsInlineMediaPlayback: true,
-                          initialMediaPlaybackPolicy: AutoMediaPlaybackPolicy.always_allow,
-                          onWebViewCreated: (WebViewController webViewController) {
-                            webViewController.loadUrl(widget.url, headers: localheaders);
-                            if (mounted) {
-                              setState(() {
-                                _webViewController = webViewController;
-                              });
-                            }
-                          },
-                          javascriptChannels: widget.javascriptChannels,
-                          navigationDelegate: (NavigationRequest request) {
-                            return NavigationDecision.navigate;
-                          },
-                          onPageStarted: (String url) {
-                            if (mounted) {
-                              setState(() {
-                                indexPage = 0;
-                                isLoaded = false;
-                                isLoading = true;
-                              });
-                              widget.onStartLoadingActionCallback();
-                            }
-                          },
-                          onProgress: (total) {
-                            if (mounted) {
-                              setState(() {
-                                totalLoaded = total;
-                              });
-
-                              if (total == 100) {
+                        Expanded(
+                          child: WebView(
+                            initialUrl: "data:text/html;base64,${base64Encode(const Utf8Encoder().convert('<html><head></head><body background="red"></body></html>'))}" ,
+                            userAgent: widget.userAgent ?? "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 M",
+                            allowsInlineMediaPlayback: true,
+                            initialMediaPlaybackPolicy: AutoMediaPlaybackPolicy.always_allow,
+                            onWebViewCreated: (WebViewController webViewController) {
+                              webViewController.loadUrl(widget.url, headers: localheaders);
+                              if (mounted) {
                                 setState(() {
-                                  isLoading = false;
-                                  isLoaded = true;
-                                  indexPage = 1;
+                                  _webViewController = webViewController;
                                 });
                               }
-                            }
-                          },
-                          onPageFinished: (String url) {
-                            if (mounted) {
-                              setState(() {
-                                indexPage = 1;
-                                isLoaded = true;
-                              });
-                              widget.onLoadedActionCallback();
-                            }
-                          },
-                          gestureNavigationEnabled: widget.gestureNavigationEnabled ?? true,
-                          debuggingEnabled: widget.debuggingEnabled ?? false,
-                          javascriptMode: widget.javascriptMode ?? JavascriptMode.unrestricted,
+                            },
+                            javascriptChannels: widget.javascriptChannels,
+                            navigationDelegate: (NavigationRequest request) {
+                              return NavigationDecision.navigate;
+                            },
+                            onPageStarted: (String url) {
+                              if (mounted) {
+                                setState(() {
+                                  indexPage = 0;
+                                  isLoaded = false;
+                                  isLoading = true;
+                                });
+                                widget.onStartLoadingActionCallback();
+                              }
+                            },
+                            onProgress: (total) {
+                              if (mounted) {
+                                setState(() {
+                                  totalLoaded = total;
+                                });
+
+                                if (total == 100) {
+                                  setState(() {
+                                    isLoading = false;
+                                    isLoaded = true;
+                                    indexPage = 1;
+                                  });
+                                }
+                              }
+                            },
+                            onPageFinished: (String url) {
+                              if (mounted) {
+                                setState(() {
+                                  indexPage = 1;
+                                  isLoaded = true;
+                                });
+                                widget.onLoadedActionCallback();
+                              }
+                            },
+                            gestureNavigationEnabled: widget.gestureNavigationEnabled ?? true,
+                            debuggingEnabled: widget.debuggingEnabled ?? false,
+                            javascriptMode: widget.javascriptMode ?? JavascriptMode.unrestricted,
+                          ),
                         ),
                       ],
                     ),
