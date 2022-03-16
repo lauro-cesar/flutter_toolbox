@@ -144,6 +144,8 @@ class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
                       children: [
                         Expanded(
                           child: WebView(
+
+
                             initialUrl: "data:text/html;base64,${base64Encode(const Utf8Encoder().convert('<html><head></head><body background="red"></body></html>'))}" ,
                             userAgent: widget.userAgent ?? "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 M",
                             allowsInlineMediaPlayback: true,
@@ -197,6 +199,7 @@ class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
                             gestureNavigationEnabled: widget.gestureNavigationEnabled ?? true,
                             debuggingEnabled: widget.debuggingEnabled ?? false,
                             javascriptMode: widget.javascriptMode ?? JavascriptMode.unrestricted,
+                            zoomEnabled: false,
                           ),
                         ),
                       ],
