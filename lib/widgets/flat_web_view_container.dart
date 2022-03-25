@@ -34,6 +34,7 @@ class FlatWebViewContainer extends StatefulWidget {
 
   /// set debug on
   bool? debuggingEnabled;
+  bool? zoomEnabled;
 
   ///enable gestureNavigation
   bool? gestureNavigationEnabled;
@@ -49,6 +50,7 @@ class FlatWebViewContainer extends StatefulWidget {
       this.javascriptChannels,
       this.javascriptMode,
       this.debuggingEnabled,
+        this.zoomEnabled,
       this.gestureNavigationEnabled,
       this.webKey,
       this.sessionheaders,
@@ -60,6 +62,8 @@ class FlatWebViewContainer extends StatefulWidget {
 }
 
 class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
+
+  bool enableZoom = true;
   bool isLoaded = false;
   WebViewController? _webViewController;
   Map<String, String>? localSessionHeaders = {};
@@ -74,9 +78,10 @@ class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
     super.initState();
 
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
-
+    final zoom = widget.zoomEnabled ?? false;
     setState(() {
       indexPage = 0;
+      enableZoom = zoom;
       isLoading = true;
       widget.sessionheaders?.forEach((key, value) {
         localheaders.addAll({key: value.toString()});
@@ -111,24 +116,6 @@ class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
           widget.onLoadingWidget,
           Stack(
             children: [
-              AnimatedPositioned(
-                  right: 50,
-                  left: 50,
-                  bottom: (isLoading) ? 10 : 0,
-                  duration: Duration(milliseconds: AppConstants.animationSpeed),
-                  curve: Curves.easeInOutBack,
-                  child: Container(
-                    height: 30,
-                    alignment: Alignment.center,
-                    child: (isLoading)
-                        ? Column(children: [
-                            Text(
-                              "${totalLoaded.toString()}%",
-                            ),
-                            LinearProgressIndicator()
-                          ])
-                        : Container(),
-                  )),
               Container(
                 child: Builder(builder: (BuildContext context) {
                   return WillPopScope(
@@ -144,8 +131,6 @@ class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
                       children: [
                         Expanded(
                           child: WebView(
-
-
                             initialUrl: "data:text/html;base64,${base64Encode(const Utf8Encoder().convert('<html><head></head><body background="red"></body></html>'))}" ,
                             userAgent: widget.userAgent ?? "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 M",
                             allowsInlineMediaPlayback: true,
@@ -206,7 +191,25 @@ class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
                     ),
                   );
                 }),
-              )
+              ),
+              AnimatedPositioned(
+                  right: 50,
+                  left: 50,
+                  bottom: (isLoading) ? 10 : 0,
+                  duration: Duration(milliseconds: AppConstants.animationSpeed),
+                  curve: Curves.easeInOutBack,
+                  child: Container(
+                    height: 30,
+                    alignment: Alignment.center,
+                    child: (isLoading)
+                        ? Column(children: [
+                      Text(
+                        "${totalLoaded.toString()}%",
+                      ),
+                      LinearProgressIndicator()
+                    ])
+                        : Container(),
+                  )),
             ],
           )
         ],
