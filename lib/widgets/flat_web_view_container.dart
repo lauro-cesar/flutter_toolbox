@@ -27,10 +27,10 @@ class FlatWebViewContainer extends StatefulWidget {
   final Widget onLoadingWidget;
 
   /// required callback to bubble up when starting load the url
-  final Function() onStartLoadingActionCallback;
+  final Function(String url) onStartLoadingActionCallback;
 
   /// required callback to bubble up after loading
-  final Function() onLoadedActionCallback;
+  final Function(String url) onLoadedActionCallback;
 
   /// set debug on
   bool? debuggingEnabled;
@@ -85,7 +85,6 @@ class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
       isLoading = true;
       widget.sessionheaders?.forEach((key, value) {
         localheaders.addAll({key: value.toString()});
-        print(value.toString());
       });
       isLoaded = false;
     });
@@ -154,7 +153,7 @@ class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
                                   isLoaded = false;
                                   isLoading = true;
                                 });
-                                widget.onStartLoadingActionCallback();
+                                widget.onStartLoadingActionCallback(url);
                               }
                             },
                             onProgress: (total) {
@@ -178,13 +177,13 @@ class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
                                   indexPage = 1;
                                   isLoaded = true;
                                 });
-                                widget.onLoadedActionCallback();
+                                widget.onLoadedActionCallback(url);
                               }
                             },
                             gestureNavigationEnabled: widget.gestureNavigationEnabled ?? true,
                             debuggingEnabled: widget.debuggingEnabled ?? false,
                             javascriptMode: widget.javascriptMode ?? JavascriptMode.unrestricted,
-                            zoomEnabled: false,
+                            zoomEnabled: enableZoom,
                           ),
                         ),
                       ],
