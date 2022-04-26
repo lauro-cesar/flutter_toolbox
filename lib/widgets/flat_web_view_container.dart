@@ -50,7 +50,7 @@ class FlatWebViewContainer extends StatefulWidget {
       this.javascriptChannels,
       this.javascriptMode,
       this.debuggingEnabled,
-        this.zoomEnabled,
+      this.zoomEnabled,
       this.gestureNavigationEnabled,
       this.webKey,
       this.sessionheaders,
@@ -62,7 +62,6 @@ class FlatWebViewContainer extends StatefulWidget {
 }
 
 class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
-
   bool enableZoom = true;
   bool isLoaded = false;
   WebViewController? _webViewController;
@@ -130,7 +129,7 @@ class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
                       children: [
                         Expanded(
                           child: WebView(
-                            initialUrl: "data:text/html;base64,${base64Encode(const Utf8Encoder().convert('<html><head></head><body background="red"></body></html>'))}" ,
+                            initialUrl: "data:text/html;base64,${base64Encode(const Utf8Encoder().convert('<html><head></head><body background="red"></body></html>'))}",
                             userAgent: widget.userAgent ?? "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 M",
                             allowsInlineMediaPlayback: true,
                             initialMediaPlaybackPolicy: AutoMediaPlaybackPolicy.always_allow,
@@ -184,6 +183,7 @@ class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
                             debuggingEnabled: widget.debuggingEnabled ?? false,
                             javascriptMode: widget.javascriptMode ?? JavascriptMode.unrestricted,
                             zoomEnabled: enableZoom,
+                            key: widget.webKey ?? Key(widget.url.toString()),
                           ),
                         ),
                       ],
@@ -202,11 +202,11 @@ class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
                     alignment: Alignment.center,
                     child: (isLoading)
                         ? Column(children: [
-                      Text(
-                        "${totalLoaded.toString()}%",
-                      ),
-                      LinearProgressIndicator()
-                    ])
+                            Text(
+                              "${totalLoaded.toString()}%",
+                            ),
+                            LinearProgressIndicator()
+                          ])
                         : Container(),
                   )),
             ],
