@@ -458,10 +458,10 @@ packages:
   webview_flutter:
     dependency: "direct main"
     description:
-      path: "pacotes/webview_flutter/webview_flutter"
-      relative: true
-    source: path
-    version: "3.0.1"
+      name: webview_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.4"
   webview_flutter_android:
     dependency: transitive
     description:
