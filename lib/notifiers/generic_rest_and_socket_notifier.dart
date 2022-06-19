@@ -64,26 +64,31 @@ class GenericRestAndSocketNotifier extends GenericMapNotifier {
   }
 
   Future<void> onRequestPage(int page, bool waitfor) async {
-    if (!_downloadedPages.contains(page)) {
-      _downloadedPages.add(page);
-      Uri url = Uri.parse("${baseRestUrl}?page=${page}");
-      final request = await StaticMethods.requestGet(url, authHeaders);
-      statusCodesByPage.addAll({page: request.statusCode});
-      notifyListeners();
-      if (request.statusCode == 200) {
-        if (waitfor) {
-          await onParseCollection(page, utf8.decode(request.bodyBytes));
-          _activePage = page;
-        } else {
-          onParseCollection(page, utf8.decode(request.bodyBytes)).then((_) => {
-                _activePage = page,
-                notifyListeners(),
-              });
-        }
+    Uri url = Uri.parse("${baseRestUrl}");
+
+    Map<String, String> query_string = {"page": page.toString()};
+
+    query_string.addAll(url.queryParameters);
+
+    url = url.replace(queryParameters: query_string);
+
+    if (kDebugMode) {
+      print(query_string);
+      print("Download url $url");
+    }
+
+    final request = await StaticMethods.requestGet(url, authHeaders);
+
+    if (request.statusCode == 200) {
+      if (waitfor) {
+        await onParseCollection(page, utf8.decode(request.bodyBytes));
+        _activePage = page;
+      } else {
+        onParseCollection(page, utf8.decode(request.bodyBytes)).then((_) => {
+              _activePage = page,
+              notifyListeners(),
+            });
       }
-    } else {
-      _activePage = page;
-      notifyListeners();
     }
   }
 
@@ -105,6 +110,10 @@ class GenericRestAndSocketNotifier extends GenericMapNotifier {
 
   Future<void> onStartWs() async {
     final url = Uri.parse("${baseSocketUrl}?sso=$ssoToken");
+    if (kDebugMode) {
+      print("Start wss $url");
+    }
+
     _ws_channel = WebSocketChannel.connect(url);
     stream = _ws_channel?.stream;
     stream?.listen((message) {
