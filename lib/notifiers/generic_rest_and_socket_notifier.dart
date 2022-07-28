@@ -89,6 +89,13 @@ class GenericRestAndSocketNotifier extends GenericMapNotifier {
               notifyListeners(),
             });
       }
+    } else {
+      Future.delayed(Duration(seconds: 5), () {
+        onRequestPage(page, waitfor);
+      });
+      if (kDebugMode) {
+        print("Erro ao baixar");
+      }
     }
   }
 
