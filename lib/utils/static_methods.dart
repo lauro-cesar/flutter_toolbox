@@ -34,6 +34,33 @@ class StaticMethods {
     }
   }
 
+  static Future<http.Response> requestHead(Uri url, Map<String, String> requestHeaders) async {
+    http.Response resposta = http.Response("", 408);
+    if (!kReleaseMode) {
+      print(url);
+    }
+    try {
+      resposta = await http.Client().head(url, headers: requestHeaders).timeout(const Duration(seconds: 240));
+      if (!kReleaseMode) {}
+      return resposta;
+    } on TimeoutException catch (e) {
+      if (!kReleaseMode) {
+        print(e);
+      }
+      return resposta;
+    } on SocketException catch (e) {
+      if (!kReleaseMode) {
+        print(e);
+      }
+      return resposta;
+    } catch (e) {
+      if (!kReleaseMode) {
+        print(e);
+      }
+      return resposta;
+    }
+  }
+
   static Future<http.Response> requestGet(Uri url, Map<String, String> requestHeaders) async {
     http.Response resposta = http.Response("", 408);
     if (!kReleaseMode) {
