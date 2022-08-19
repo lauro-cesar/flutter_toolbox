@@ -7,7 +7,12 @@ import 'package:web_socket_channel/status.dart' as status;
 import '../utils/static_methods.dart';
 
 class GenericRestAndSocketNotifier extends GenericMapNotifier {
-  GenericRestAndSocketNotifier({required this.keyName, required this.baseSocketUrl, required this.baseRestUrl, required this.authHeaders, required this.ssoToken})
+  GenericRestAndSocketNotifier(
+      {required this.keyName,
+      required this.baseSocketUrl,
+      required this.baseRestUrl,
+      required this.authHeaders,
+      required this.ssoToken})
       : super(keyName: keyName);
 
   final String keyName;
@@ -35,9 +40,12 @@ class GenericRestAndSocketNotifier extends GenericMapNotifier {
 
   int _activePage = 1;
   int get activePage => _activePage;
-  int get totalPages => throw UnimplementedError("Metodo para informar total de paginas");
-  int get totalResults => throw UnimplementedError("Metodo para informar total de resultados");
-  bool get isReady => throw UnimplementedError("Propriedade para informar da inicializacao");
+  int get totalPages =>
+      throw UnimplementedError("Metodo para informar total de paginas");
+  int get totalResults =>
+      throw UnimplementedError("Metodo para informar total de resultados");
+  bool get isReady =>
+      throw UnimplementedError("Propriedade para informar da inicializacao");
 
   Future<void> onRequestPrevPage() async {
     onRequestPage(_activePage - 1, false);
@@ -56,11 +64,13 @@ class GenericRestAndSocketNotifier extends GenericMapNotifier {
   }
 
   Future<void> onRebuildState(String newData) async {
-    throw UnimplementedError("Metodo para reconstruir o state nao implementado");
+    throw UnimplementedError(
+        "Metodo para reconstruir o state nao implementado");
   }
 
   Future<void> onParseCollection(int page, String collection) async {
-    throw UnimplementedError("Metodo para processar uma novacolecao nao implementado");
+    throw UnimplementedError(
+        "Metodo para processar uma novacolecao nao implementado");
   }
 
   Future<void> onRequestPage(int page, bool waitfor) async {
@@ -123,8 +133,13 @@ class GenericRestAndSocketNotifier extends GenericMapNotifier {
 
     _ws_channel = WebSocketChannel.connect(url);
     stream = _ws_channel?.stream;
+
     stream?.listen((message) {
       onRebuildState(message);
-    });
+    }, onError: (error) {
+      Future.delayed(Duration(seconds: 5), () {
+        closeWs().then((value) => onStartWs());
+      });
+    }, onDone: () {});
   }
 }
