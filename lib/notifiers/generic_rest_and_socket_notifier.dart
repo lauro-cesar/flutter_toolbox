@@ -23,6 +23,10 @@ class GenericRestAndSocketNotifier extends GenericMapNotifier {
   WebSocketChannel? _ws_channel;
   StreamSubscription? _channelListener;
   Stream? stream;
+
+  List<Map<int, dynamic>> _collections =[];
+  List<Map<int, dynamic>> get collections => _collections;
+
   Map<String, dynamic> _last_data = {};
   Map<String, dynamic> get last_data => _last_data;
   bool _changeSelection = false;
@@ -68,18 +72,28 @@ class GenericRestAndSocketNotifier extends GenericMapNotifier {
         "Metodo para reconstruir o state nao implementado");
   }
 
-  Future<void> onParseCollection(int page, String collection) async {
-    throw UnimplementedError(
-        "Metodo para processar uma novacolecao nao implementado");
+
+  Future<Map<String, dynamic>> onComputeJson(String inputData) async {
+    return jsonDecode(inputData);
+  }
+
+  Future<void> onParseCollection(int page, String inputData) async {
+    Map<String, dynamic>  collection = await compute(onComputeJson, inputData);
+    if(collection.containsKey("results")){
+      List<dynamic> results = collection['results'];
+      results.forEach((element) {
+        onRebuildState(element);
+      });
+
+    }
   }
 
   Future<void> onRequestPage(int page, bool waitfor) async {
+    _activePage = page;
+
     Uri url = Uri.parse("${baseRestUrl}");
-
     Map<String, String> query_string = {"page": page.toString()};
-
     query_string.addAll(url.queryParameters);
-
     url = url.replace(queryParameters: query_string);
 
     if (kDebugMode) {
@@ -92,12 +106,9 @@ class GenericRestAndSocketNotifier extends GenericMapNotifier {
     if (request.statusCode == 200) {
       if (waitfor) {
         await onParseCollection(page, utf8.decode(request.bodyBytes));
-        _activePage = page;
+
       } else {
-        onParseCollection(page, utf8.decode(request.bodyBytes)).then((_) => {
-              _activePage = page,
-              notifyListeners(),
-            });
+        onParseCollection(page, utf8.decode(request.bodyBytes));
       }
     } else {
       Future.delayed(Duration(seconds: 5), () {
