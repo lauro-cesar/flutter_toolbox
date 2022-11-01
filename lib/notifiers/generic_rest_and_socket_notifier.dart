@@ -132,7 +132,7 @@ class GenericRestAndSocketNotifier extends GenericMapNotifier {
         });
   }
 
-  Future<void> sendMessage(String msg) async {
+  Future<void> sendMessage(dynamic msg) async {
     _ws_channel?.sink.add(msg);
   }
 
