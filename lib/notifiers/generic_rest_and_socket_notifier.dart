@@ -133,7 +133,13 @@ class GenericRestAndSocketNotifier extends GenericMapNotifier {
   }
 
   Future<void> sendMessage(dynamic msg) async {
-    _ws_channel?.sink.add(msg);
+    try {
+      _ws_channel?.sink.add(msg);
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
   }
 
   Future<void> onPingWs() async {
@@ -142,7 +148,7 @@ class GenericRestAndSocketNotifier extends GenericMapNotifier {
       print("ping wss");
     }
 
-    sendMessage("{ACTION:PING}");
+    sendMessage({"PING":"ping"});
     Future.delayed(Duration(seconds: 25), () {
       onPingWs();
     });
