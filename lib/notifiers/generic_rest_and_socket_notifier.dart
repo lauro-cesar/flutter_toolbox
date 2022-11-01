@@ -136,6 +136,19 @@ class GenericRestAndSocketNotifier extends GenericMapNotifier {
     _ws_channel?.sink.add(msg);
   }
 
+  Future<void> onPingWs() async {
+
+    if (kDebugMode) {
+      print("ping wss");
+    }
+
+    sendMessage("{ACTION:PING}");
+    Future.delayed(Duration(seconds: 25), () {
+      onPingWs();
+    });
+
+
+  }
   Future<void> onStartWs() async {
     final url = Uri.parse("${baseSocketUrl}?sso=$ssoToken");
     if (kDebugMode) {
