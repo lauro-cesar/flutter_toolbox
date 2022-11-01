@@ -89,7 +89,7 @@ class GenericRestAndSocketNotifier extends GenericMapNotifier {
   }
 
   Future<void> onRequestPage(int page, bool waitfor) async {
-    _activePage = page;
+
 
     Uri url = Uri.parse("${baseRestUrl}");
     Map<String, String> query_string = {"page": page.toString()};
@@ -104,9 +104,9 @@ class GenericRestAndSocketNotifier extends GenericMapNotifier {
     final request = await StaticMethods.requestGet(url, authHeaders);
 
     if (request.statusCode == 200) {
+      _activePage = page;
       if (waitfor) {
         await onParseCollection(page, utf8.decode(request.bodyBytes));
-
       } else {
         onParseCollection(page, utf8.decode(request.bodyBytes));
       }
@@ -144,7 +144,10 @@ class GenericRestAndSocketNotifier extends GenericMapNotifier {
 
     _ws_channel = WebSocketChannel.connect(url);
     stream = _ws_channel?.stream;
-
+    _ws_channel?.stream.handleError((error) {
+      print("tem erro no socker");
+      print(error);
+    });
     stream?.listen((message) {
       onRebuildState(message);
     }, onError: (error) {
