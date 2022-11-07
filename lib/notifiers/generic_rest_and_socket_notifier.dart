@@ -23,6 +23,7 @@ class GenericRestAndSocketNotifier extends GenericMapNotifier {
   WebSocketChannel? _ws_channel;
   StreamSubscription? _channelListener;
   Stream? stream;
+  WebSocketSink? sink;
 
   List<Map<int, dynamic>> _collections =[];
   List<Map<int, dynamic>> get collections => _collections;
@@ -35,6 +36,8 @@ class GenericRestAndSocketNotifier extends GenericMapNotifier {
   bool in_dispose = false;
   int get totalUpdates => _inbound_data.length;
   Map<int, int> statusCodesByPage = {};
+  Map<String, String> query_string = {};
+
 
   List<int> _downloadedPages = [];
 
@@ -88,11 +91,12 @@ class GenericRestAndSocketNotifier extends GenericMapNotifier {
     }
   }
 
+
   Future<void> onRequestPage(int page, bool waitfor) async {
 
 
     Uri url = Uri.parse("${baseRestUrl}");
-    Map<String, String> query_string = {"page": page.toString()};
+    query_string.addAll({"page": page.toString()});
     query_string.addAll(url.queryParameters);
     url = url.replace(queryParameters: query_string);
 
