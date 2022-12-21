@@ -51,24 +51,24 @@ class GenericMapNotifier extends ChangeNotifier with AppLocalFilesApi {
     await _loadAppState();
   }
 
-  void onAdd(Map<String, dynamic> values) {
+  Future<void>  onAdd(Map<String, dynamic> values) async {
     _instanceMap.addAll(values);
   }
 
-  void onNotify() {
+  Future<void>  onNotify() async {
     notifyListeners();
   }
 
-  void onSave() {
+  Future<void>  onSave() async {
     _saveAppState();
   }
 
-  void addAndSave(Map<String, dynamic> values) {
+  Future<void>  addAndSave(Map<String, dynamic> values) async  {
     _instanceMap.addAll(values);
     _saveAppState().then((value) => {notifyListeners()});
   }
 
-  void add(Map<String, dynamic> values) {
+  Future<void>  add(Map<String, dynamic> values) async {
     _instanceMap.addAll(values);
     _saveAppState().then((value) => {notifyListeners()});
   }
@@ -79,12 +79,12 @@ class GenericMapNotifier extends ChangeNotifier with AppLocalFilesApi {
     notifyListeners();
   }
 
-  void del(Map<String, dynamic> values) {
+  Future<void>  del(Map<String, dynamic> values) async {
     _instanceMap.remove(values);
     _saveAppState().then((value) => {notifyListeners()});
   }
 
-  void removeAll() {
+  Future<void> removeAll() async {
     Map<String, dynamic> _writeMap = {};
     _keepKeys.forEach((key) {
       _writeMap.addAll(_instanceMap[key]);
