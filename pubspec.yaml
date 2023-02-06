@@ -1,6 +1,6 @@
 name: flutter_toolbox
 description: Flutter utility belt
-version: 0.0.55
+version: 0.0.56
 author: Lauro Cesar de Oliveira <olarva@gmail.com>
 homepage:
 
@@ -19,7 +19,7 @@ dependencies:
   http: ^0.13.4
   package_info_plus: ^3.0.1
   web_socket_channel: ^2.2.0
-  webview_flutter: ^3.0.4
+  webview_flutter: ^4.0.2
 
 
 
