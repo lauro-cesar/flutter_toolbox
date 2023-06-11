@@ -17,7 +17,7 @@ class AppBaseFormMixin {
   List<TextEditingController>? inputControls;
   List<FocusNode>? focusNodes;
 
-  void goTo({next: 0, message: null}) {}
+  void goTo(next, message) {}
 
   void scrollTo() {
     controller!.animateTo((scrollOffset * index.toDouble()),
@@ -36,28 +36,26 @@ class AppBaseFormMixin {
     //     duration: Duration(milliseconds: 100), curve: Curves.fastOutSlowIn);
   }
 
-  void goBack({message: null}) {
+  void goBack(message) {
     if (index > 1) {
       focusNodes?.map((e) => e.unfocus());
       index--;
-      goTo(next: index, message: message);
+      goTo(index,message);
     }
   }
 
-  void goNext({message: null}) {
+  void goNext(message) {
     if (index <= max) {
       focusNodes?.map((e) => e.unfocus());
       index++;
-      goTo(next: index, message: message);
+      goTo(index,message);
     }
   }
 
   focusVisible() {
     try {
       FocusNode node = focusNodes!.elementAt(index);
-      if (node != null) {
-        node.requestFocus();
-      }
+      node.requestFocus();
     } catch (e) {
       print(e.toString());
     }

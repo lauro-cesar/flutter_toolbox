@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
-class AppLocalFilesApi {
+mixin AppLocalFilesApi {
   Future<String> get localPath async {
     final directory = await getApplicationSupportDirectory();
     return directory.path;

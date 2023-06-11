@@ -18,7 +18,7 @@ class FlatWebViewContainer extends StatefulWidget {
   Map<String, dynamic>? sessionheaders;
 
   /// optional Javascript channels to subcribe
-  Set<JavascriptChannel>? javascriptChannels;
+  Set<dynamic>? javascriptChannels;
 
   /// optional Key
   Key? webKey;
@@ -40,7 +40,7 @@ class FlatWebViewContainer extends StatefulWidget {
   bool? gestureNavigationEnabled;
 
   /// enable Javascript JavascriptMode. JavascriptMode.unrestricted | JavascriptMode.disabled
-  JavascriptMode? javascriptMode;
+  dynamic? javascriptMode;
 
   FlatWebViewContainer(
       {required this.url,
@@ -76,7 +76,6 @@ class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
   void initState() {
     super.initState();
 
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     final zoom = widget.zoomEnabled ?? false;
     setState(() {
       indexPage = 0;
@@ -94,15 +93,6 @@ class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
     super.dispose();
   }
 
-  // JavascriptChannel _openObjectScreen(BuildContext context) {
-  //   return JavascriptChannel(
-  //       name: 'OpenObjectScreen',
-  //       onMessageReceived: (JavascriptMessage message) {
-  //         if (widget.onOpenObject != null) {
-  //           widget.onOpenObject(message.message);
-  //         }
-  //       });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -128,87 +118,14 @@ class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
                     child: Column(
                       children: [
                         Expanded(
-                          child: WebView(
-                            initialUrl: "data:text/html;base64,${base64Encode(const Utf8Encoder().convert('<html><head></head><body background="red"></body></html>'))}",
-                            userAgent: widget.userAgent ?? "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 M",
-                            allowsInlineMediaPlayback: true,
-                            initialMediaPlaybackPolicy: AutoMediaPlaybackPolicy.always_allow,
-                            onWebViewCreated: (WebViewController webViewController) {
-                              webViewController.loadUrl(widget.url, headers: localheaders);
-                              if (mounted) {
-                                setState(() {
-                                  _webViewController = webViewController;
-                                });
-                              }
-                            },
-                            javascriptChannels: widget.javascriptChannels,
-                            navigationDelegate: (NavigationRequest request) {
-                              return NavigationDecision.navigate;
-                            },
-                            onPageStarted: (String url) {
-                              if (mounted) {
-                                setState(() {
-                                  indexPage = 0;
-                                  isLoaded = false;
-                                  isLoading = true;
-                                });
-                                widget.onStartLoadingActionCallback(url);
-                              }
-                            },
-                            onProgress: (total) {
-                              if (mounted) {
-                                setState(() {
-                                  totalLoaded = total;
-                                });
-
-                                if (total == 100) {
-                                  setState(() {
-                                    isLoading = false;
-                                    isLoaded = true;
-                                    indexPage = 1;
-                                  });
-                                }
-                              }
-                            },
-                            onPageFinished: (String url) {
-                              if (mounted) {
-                                setState(() {
-                                  indexPage = 1;
-                                  isLoaded = true;
-                                });
-                                widget.onLoadedActionCallback(url);
-                              }
-                            },
-                            gestureNavigationEnabled: widget.gestureNavigationEnabled ?? true,
-                            debuggingEnabled: widget.debuggingEnabled ?? false,
-                            javascriptMode: widget.javascriptMode ?? JavascriptMode.unrestricted,
-                            zoomEnabled: enableZoom,
-                            key: widget.webKey ?? Key(widget.url.toString()),
-                          ),
+                          child: Text("Descontinued...")
                         ),
                       ],
                     ),
                   );
                 }),
               ),
-              AnimatedPositioned(
-                  right: 50,
-                  left: 50,
-                  bottom: (isLoading) ? 10 : 0,
-                  duration: Duration(milliseconds: AppConstants.animationSpeed),
-                  curve: Curves.easeInOutBack,
-                  child: Container(
-                    height: 30,
-                    alignment: Alignment.center,
-                    child: (isLoading)
-                        ? Column(children: [
-                            Text(
-                              "${totalLoaded.toString()}%",
-                            ),
-                            LinearProgressIndicator()
-                          ])
-                        : Container(),
-                  )),
+
             ],
           )
         ],
