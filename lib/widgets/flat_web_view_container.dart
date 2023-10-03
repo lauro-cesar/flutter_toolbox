@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:io';
 
 import '../utils/static_constants.dart';
@@ -64,7 +63,6 @@ class FlatWebViewContainer extends StatefulWidget {
 class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
   bool enableZoom = true;
   bool isLoaded = false;
-  WebViewController? _webViewController;
   Map<String, String>? localSessionHeaders = {};
   Map<String, String> localheaders = {};
   int indexPage = 0;
@@ -108,11 +106,6 @@ class _FlatWebViewContainerState extends State<FlatWebViewContainer> {
                 child: Builder(builder: (BuildContext context) {
                   return WillPopScope(
                     onWillPop: () async {
-                      final podeVoltar = await _webViewController?.canGoBack();
-                      if (podeVoltar ?? false) {
-                        _webViewController?.goBack();
-                        return false;
-                      }
                       return true;
                     },
                     child: Column(
