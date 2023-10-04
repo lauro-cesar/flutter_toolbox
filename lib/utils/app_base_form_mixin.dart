@@ -3,7 +3,7 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 
-class AppBaseFormMixin {
+mixin AppBaseFormMixin {
   int index = 0;
   int max = 0;
   int totalSteps = 1;
