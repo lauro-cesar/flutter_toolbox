@@ -5,25 +5,20 @@ author: Lauro Cesar de Oliveira <olarva@gmail.com>
 homepage:
 
 environment:
-#  sdk: ">=2.16.1 <3.0.0"
-#  flutter: ">=1.17.0"
-  flutter: ">=2.0.0"
+  flutter: ">=3.0.0"
   sdk: '>=3.0.3 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  http: ^1.0.0
-  package_info_plus: ^4.0.2
+  http: ^1.2.0
+  package_info_plus: ^5.0.1
   path: ^1.8.3
-  path_provider: ^2.0.15
-  provider: ^6.0.5
-  shared_preferences: ^2.1.2
-  url_launcher: ^6.1.11
+  path_provider: ^2.1.2
+  provider: ^6.1.1
+  shared_preferences: ^2.2.2
+  url_launcher: ^6.2.3
   web_socket_channel: ^2.4.0
-
-
-
 
 
 dev_dependencies:
